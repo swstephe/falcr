@@ -1,23 +1,20 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import * as getters from './getters'
 import * as actions from './actions'
+import * as getters from './getters'
 import mutations from './mutations'
 
 Vue.use(Vuex)
 
 const state = {
-    logged_in: false,
-    entries: [],
-    newEntry: {
-        title: '',
-        text: ''
-    }
+  login_active: false,
+  quote: {quote: '', author: ''},
+  token: undefined
 }
 
 export default new Vuex.Store({
-    state,
-    getters,
-    actions,
-    mutations
+  state,
+  getters,
+  actions,
+  mutations
 })

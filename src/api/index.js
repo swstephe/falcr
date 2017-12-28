@@ -1,23 +1,18 @@
 import axios from 'axios'
 
-export function getEntries (cb) {
-    axios.get('/entries')
-    .then(response => {
-        console.log("api.get.response")
-        console.log(response)
-        cb(response.data.entries)
-    })
-    .catch(error => { console.log(error) })
+export function login (email, password, cb) {
+  console.log("email/password")
+  console.log(email)
+  console.log(password)
+  console.log(cb)
+  axios.post('/login', {email: email, password: password})
+  .then(response => { cb(response.data.token) })
+  .catch(error => { console.error(error)})
 }
 
-export function addEntry ({ title, text}, cb) {
-    console.log("title=" + title)
-    console.log("text=" + text)
-    axios.post('/entries', {title: title, text: text})
-    .then(response => {
-        console.log("api.post.response")
-        console.log(response)
-        cb({id: response.data.id, title: title, text: text})
-    })
-    .catch(error => { console.log(error) })
+export function quote (token, cb) {
+  axios.get('/quote', {headers: { Authorization: "Bearer " + token}})
+  .then(response => { cb(response.data) })
+  .catch(error => { console.error(error)})
 }
+

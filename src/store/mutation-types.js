@@ -1,2 +1,4 @@
-export const GET_ENTRIES = 'GET_ENTRIES'
-export const ADD_ENTRY = 'ADD_ENTRY'
+export const QUOTE = 'QUOTE'
+export const LOGIN = 'LOGIN'
+export const SHOW_LOGIN = 'SHOW_LOGIN'
+export const HIDE_LOGIN = 'HIDE_LOGIN'
