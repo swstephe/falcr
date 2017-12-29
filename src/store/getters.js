@@ -1,15 +1,7 @@
-export const is_active = state => {
-  return state.login_active
+export const isLoggedIn = state => {
+  return state.isLoggedIn
 }
 
-export const getLoggedIn = state => {
-  return state.token ? true : false
-}
-
-export const getQuote = state => {
+export const quote = state => {
   return state.quote
-}
-
-export const getToken = state => {
-  return state.token
 }

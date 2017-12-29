@@ -1,5 +1,5 @@
 <template>
-  <div class="modal" :class="{'is-active': is_active}">
+  <div class="modal" :class="{'is-active': !isLoggedIn}">
     <div class="modal-background"></div>
     <div class="modal-content">
       <div class="box">
@@ -16,11 +16,10 @@
               <input class="input" id="password" name="password" type="password" v-model="password"/>
             </div>
           </div>
-          <a class="button is-block is-info is-large" @click='login(email, password)'>Log in</a>
+          <a class="button is-block is-info is-large" @click='login({email: email, password: password})'>Log in</a>
         </form>
       </div>
     </div>
-    <button class="modal-close is-large" aria-label="close" @click='hide_login'></button>
   </div>
 </template>
 
@@ -31,13 +30,13 @@ export default {
   name: 'login',
   data () {
     return {
-      email: '',
-      password: ''
+      email: 'scott',
+      password: 'admin'
     }
   },
   computed: {
     ...mapGetters([
-      'is_active'
+      'isLoggedIn'
     ]),
   },
   methods: {

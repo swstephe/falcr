@@ -1,22 +1,23 @@
 import * as api from '../api'
 import * as types from './mutation-types'
 
-export const quote = ({ commit }, token) => {
-  api.quote(token, quote => {
+export const login = ({ state, commit, rootState }, creds) => {
+  commit(types.LOGIN)
+  api.login(creds, token => {
+    localStorage.setItem("token", token)
+    commit(types.LOGIN_SUCCESS)
+    getQuote({ commit })
+  })
+}
+
+export const logout = ({ commit }) => {
+  localStorage.removeItem("token")
+  commit(types.LOGOUT)
+}
+
+export const getQuote = ({ commit }) => {
+  api.getQuote(quote => {
     commit(types.QUOTE, { quote })
   })
 }
 
-export const login = ({ commit }, email, password) => {
-  api.login(email, password, token => {
-    commit(types.LOGIN, { token })
-  })
-}
-
-export const show_login = ({ commit }) => {
-  commit(types.SHOW_LOGIN)
-}
-
-export const hide_login = ({ commit }) => {
-  commit(types.HIDE_LOGIN)
-}

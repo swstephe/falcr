@@ -4,9 +4,6 @@ import store from './store'
 
 new Vue({
   el: '#app',
-  data: {
-    login_active: false
-  },
   store,
   render: h => h(App)
 })

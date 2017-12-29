@@ -7,9 +7,9 @@ import mutations from './mutations'
 Vue.use(Vuex)
 
 const state = {
-  login_active: false,
-  quote: {quote: '', author: ''},
-  token: undefined
+  isLoggedIn: localStorage.getItem("token") !== null,
+  pending: false,
+  quote: {quote: '', author: ''}
 }
 
 export default new Vuex.Store({
