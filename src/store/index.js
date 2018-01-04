@@ -1,20 +1,27 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import * as actions from './actions'
-import * as getters from './getters'
-import mutations from './mutations'
+import createPersistedState from 'vuex-persistedstate'
+
+import auth0 from './modules/auth0'
+import quotes from './modules/quotes'
 
 Vue.use(Vuex)
 
-const state = {
-  isLoggedIn: localStorage.getItem("token") !== null,
-  pending: false,
-  quote: {quote: '', author: ''}
-}
-
-export default new Vuex.Store({
-  state,
-  getters,
-  actions,
-  mutations
+const store = new Vuex.Store({
+  modules: {
+    auth0,
+    quotes
+  },
+  plugins: [
+    createPersistedState({
+      paths: [
+        'auth0.accessToken',
+        'auth0.idToken',
+        'auth0.user',
+        'auth0.expiresAt'
+      ]
+    })
+  ]
 })
+
+export default store

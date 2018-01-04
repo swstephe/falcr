@@ -2,40 +2,37 @@
   <div class="container">
     <nav class="navbar is-white">
       <div class="navbar-brand">
-        <a href="/" class="navbar-item brand-text">Falcr</a>
+        <router-link to="/" class="navbar-item brand-text">Auth</router-link>
       </div>
-      <div v-if="isLoggedIn" class="navbar-menu">
+      <div class="navbar-menu">
+        <div class="navbar-start">
+          <router-link to="/quote" class="navbar-item">Quote</router-link>
+        </div>
         <div class="navbar-end">
-          <a href="#" class="navbar-item" @click="logout()">Log Out</a>
+          <a @click='login' class="navbar-item">Log In</a>
+          <a @click='logout' class="navbar-item">Log Out</a>
         </div>
       </div>
     </nav>
-    <quote></quote>
-    <login></login>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
-  import Quote from './components/Quote'
-  import Login from './components/Login'
-
-  export default {
-    name: 'app',
-    computed: {
-      ...mapGetters([
-        'isLoggedIn'
-      ])
-    },
-    methods: {
-      ...mapActions([
-        'logout'
-      ])
-    },
-    components: {
-      'quote': Quote,
-      'login': Login
-    }
+export default {
+  name: 'app',
+  computed: {
+    ...mapGetters([
+      'isAuthenticated'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'login',
+      'logout'
+    ])
   }
+}
 </script>
