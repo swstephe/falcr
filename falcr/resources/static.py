@@ -1,11 +1,12 @@
 import os
 import falcon
-from falcr.config import getLogger, ROOT
+from auth.config import getLogger, ROOT
 
 log = getLogger(__name__)
 
 
 class StaticResource(object):
+    disable_auth = True
     def __init__(self, filename, content_type):
         self.filename = os.path.join(ROOT, filename)
         self.content_type = content_type

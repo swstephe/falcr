@@ -1,10 +1,9 @@
-from falcr.config import getLogger
-from falcr.db import model
+import falcon
+from auth.config import getLogger
 
 log = getLogger(__name__)
 
-
 class QuoteResource(object):
     def on_get(self, req, resp):
-        log.debug("QuoteResource.on_get")
-        resp.media = model.Quotes.random_quote()
+        log.info("QuoteResource.on_get")
+        resp.media = {'quote': 'Witty quote here'}
