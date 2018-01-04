@@ -1,14 +1,18 @@
 {
-  "name": "falcr",
+  "name": "auth",
   "version": "1.0.0",
-  "description": "",
+  "author": "Scott Stephens <scott.stephens@bankofhtewest.com>",
+  "licsens": "ISC",
+  "description": "attempt to integrate falcon with auth0 backend",
   "main": "webpack.config.js",
   "dependencies": {
     "vue": "^2.5.13",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "vuex-persistedstate": "^2.4.2"
   },
   "devDependencies": {
+    "auth0-js": "^9.0.2",
     "axios": "^0.17.1",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
@@ -20,7 +24,5 @@
     "vue-loader": "^13.6.1",
     "vue-template-compiler": "^2.5.13",
     "webpack": "^3.10.0"
-  },
-  "author": "Scott Stephens <scott.stephens@bankofthewest.com>",
-  "license": "ISC"
+  }
 }
