@@ -1,13 +1,8 @@
 import axios from 'axios'
-
-export function login (creds, cb) {
-  axios.post('/login', creds)
-  .then(response => { cb(response.data.token) })
-  .catch(error => { console.error(error)})
-}
+import store from '../store'
 
 export function getQuote (cb) {
-  let token = localStorage.getItem("token");
+  let token = store.state.auth0.idToken
   axios.get('/quote', {headers: { Authorization: "Bearer " + token}})
   .then(response => { cb(response.data) })
   .catch(error => { console.error(error)})

@@ -1,6 +1,6 @@
 from wsgiref.simple_server import make_server
 from falcr.app import api
-from falcr.config import getLogger, ROOT
+from falcr.config import getLogger
 from falcr.resources.static import StaticResource
 
 log = getLogger(__name__)

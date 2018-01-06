@@ -4,17 +4,20 @@
       <div class="card">
         <div class="card-content">
           <p class="title">
-            <span v-if="isLoggedIn">{{ quote.quote }}</span>
+            <span v-if="isAuthenticated">{{ quote.quote }}</span>
             <span v-else>You are not logged in</span>
           </p>
           <br>
           <p class="subtitle">
-            <span v-if="isLoggedIn">&mdash; {{ quote.author }}</span>
+            <span v-if="isAuthenticated">&mdash; {{ quote.author }}</span>
             <span v-else>Please log in to view quotes</span>
+          </p>
+          <p>
+            <span v-if="isAuthenticated">You are logged in as in as <em>{{ user.email }}</em></span>
           </p>
         </div>
         <footer class="card-footer">
-          <button v-if="isLoggedIn" class="card-footer-item" @click='getQuote'>Get Another Quote</button>
+          <button v-if="isAuthenticated" class="card-footer-item" @click='getQuote'>Get Another Quote</button>
         </footer>
       </div>
     </div>
@@ -25,9 +28,10 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  name: 'quote',
+  name: 'home',
   computed: mapGetters([
-    'isLoggedIn',
+    'isAuthenticated',
+    'user',
     'quote'
   ]),
   methods: {
@@ -35,8 +39,8 @@ export default {
       'getQuote'
     ])
   },
-  created () {
-    if (this.isLoggedIn) {
+  mounted () {
+    if (this.isAuthenticated) {
       this.getQuote()
     }
   }
