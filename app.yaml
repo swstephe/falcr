@@ -1,5 +1,3 @@
-application: falcr
-version: 1
 runtime: python27
 api_version: 1
 threadsafe: yes
@@ -34,11 +32,11 @@ skip_files:
 - ^(.*/)?.*/RCS/.*$
 - ^(.*/)?\..*$
 - ^(.*/)?.*\.bak$
-- data/
-- node_modules/
-- src/
-- ^\.babelrc$
-- ^\.gitignore$
 - ^package\.json$
 - ^package-lock\.json
 - ^webpack\.config\.js
+- data/
+- lib/
+- node_modules/
+- src/
+- venv/
