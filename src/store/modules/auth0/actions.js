@@ -27,16 +27,12 @@ export const logout = ({ commit }) => {
   })
 }
 
-export const handleAuthentication = ({ state, commit }) => {
+export const handleAuthentication = ({ state, commit, dispatch }) => {
   return new Promise((resolve, reject) => {
     auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        auth0.client.userInfo(authResult.accessToken, (err, user) => {
-          if (err) {
-            user = null;
-          }
-          commit(types.AUTH0_LOGIN_SUCCESS, {authResult, user })
-        })
+        commit(types.AUTH0_LOGIN_SUCCESS, {authResult, user: {email: authResult.idTokenPayload.email}})
+        dispatch('getQuote', null, {root: true})
         return resolve()
       } else if (err) {
         commit(types.AUTH0_LOGIN_FAILURE, {
@@ -65,27 +61,6 @@ export const refreshToken = ({ state, commit }) => {
         })
       }
       commit(types.AUTH0_REFRESH_TOKEN_SUCCESS, result)
-      return resolve()
-    })
-  })
-}
-
-export const getUser = ({ state, commit, dispatch }) => {
-  return new Promise((resolve, reject) => {
-    if (state.user) {
-      // Do not load profile if it already exists in state
-      return resolve()
-    }
-    commit(types.AUTH0_USER_INFO_REQUEST)
-    auth0.getUser(state.idToken, (err, profile) => {
-      if (err) {
-        if (err.error === 401) {
-          return dispatch(types.AUTH0_LOGOUT)
-        }
-        commit(types.AUTH0_USER_INFO_FAILURE, { error: err })
-        return reject(err)
-      }
-      commit(types.AUTH0_USER_INFO_SUCCESS, { profile })
       return resolve()
     })
   })

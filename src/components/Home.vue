@@ -41,7 +41,11 @@ export default {
   },
   mounted () {
     if (this.isAuthenticated) {
+      console.log("authenticated")
       this.getQuote()
+    }
+    else {
+      console.log("not authenticated")
     }
   }
 }

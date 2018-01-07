@@ -2,9 +2,9 @@ import * as auth0 from 'auth0-js'
 
 export default new auth0.WebAuth({
   domain: 'ariftek.auth0.com',
-  clientID: 'H6L6IkdiJsZSVMkn7FljrjaAr11dIVLh',
+  clientID: 'NjYo5Wd169t0G4IPLspKBgQtjJif1cd0',
   redirectUri: 'http://localhost:8080/callback',
-  audience: 'https://falcr.ariftek.com/',
+  audience: 'https://ariftek.auth0.com/userinfo',
   responseType: 'token id_token',
   scope: 'openid email'
 })

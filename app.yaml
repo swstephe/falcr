@@ -7,8 +7,6 @@ threadsafe: yes
 libraries:
 - name: pycrypto
   version: "2.6.1"
-- name: ssl
-  version: latest
 
 handlers:
 - url: /favicon\.ico
@@ -28,3 +26,19 @@ handlers:
 - url: /callback
   static_files: index.html
   upload: index\.html
+
+skip_files:
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- ^(.*/)?.*\.bak$
+- data/
+- node_modules/
+- src/
+- ^\.babelrc$
+- ^\.gitignore$
+- ^package\.json$
+- ^package-lock\.json
+- ^webpack\.config\.js

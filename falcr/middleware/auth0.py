@@ -1,81 +1,50 @@
-import base64
-import json
-from jose import jwt
-import requests
-import requests_toolbelt.adapters.appengine
+import jwt
+from jwt.contrib.algorithms.pycrypto import RSAAlgorithm
 
 import falcon
 from falcr.config import getLogger
-from falcr.db.auth import valid_token
-from falcr.resources.static import StaticResource
 
-requests_toolbelt.adapters.appengine.monkeypatch()
 log = getLogger(__name__)
+jwt.register_algorithm('RS256', RSAAlgorithm(RSAAlgorithm.SHA256))
 
-AUTH0_DOMAIN = 'ariftek.auth0.com'
-API_AUDIENCE = 'H6L6IkdiJsZSVMkn7FljrjaAr11dIVLh'
-JWKS = requests.get('https://{}/.well-known/jwks.json'.format(AUTH0_DOMAIN)).json()
-RSA_KEY = dict((k, JWKS['keys'][0][k]) for k in ('kty', 'kid', 'use', 'n', 'e'))
-
-
-class Unauthorized(falcon.HTTPUnauthorized):
-    def __init__(self, code, description):
-        super(Unauthorized, self).__init__(code, description)
-
-
-class BadRequest(falcon.HTTPBadRequest):
-    def __init__(self, code, description):
-        super(BadRequest, self).__init__(code, description)
+PUBKEY = """\
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvKw8S0pDTr8xUSA4pHv9
+zuK4+Ml6rQ2mTw1xzK+59RGhczexNe0DguliH57ez5U+OVYq0PEE+jEfu0d+XfZs
+pNRh1SL1tG1WKmrTsIZZYwNxyOYib7lLGkIxopgUU7rCbqp219LSW4EiJ8mESTRi
+BmzKtgfnszmEH68FF/F93yzq6L+BXhUqqyIp0k+UNNwRvGFvzVFYxB6ePWgKsEI8
+WCXoViLGfo1DoW1oTazX7MA8sVLy2zV5qE866ohC6Q4qS+3yl2XA3mCgGdmcUkzd
+zY9LRBV2YMfL+8aAemHUuIl4KVrWU3lusApqDlYJxhuqgkwyaqqEyirw3/U6bN8B
+8wIDAQAB
+-----END PUBLIC KEY-----
+"""
+AUTH_CONFIG = {
+    'algorithms': ['RS256'],
+    'audience': 'NjYo5Wd169t0G4IPLspKBgQtjJif1cd0',
+    'subject': 'H6L6IkdiJsZSVMkn7FljrjaAr11dIVLh@clients',
+    'issuer': 'https://ariftek.auth0.com/'
+}
 
 
 class AuthMiddleware(object):
     def process_resource(self, req, resp, resource, params):
-        log.info("called auth middleware")
         if getattr(resource, 'disable_auth', False):
             return
         auth = req.get_header('Authorization')
-        log.info("Authorization header = %r", auth)
         if not auth:
-            raise Unauthorized(
+            raise falcon.HTTPUnauthorized(
                 'authorization_header_missing',
                 "Authorization header is expected"
             )
-        parts = auth.split()
-        if parts[0].lower() != 'bearer':
-            raise Unauthorized(
-                'invalid_header',
-                "Authorization header must start with Bearer"
-            )
-        elif len(parts) == 1:
-            raise Unauthorized(
-                'invalid_header',
-                "Token not found"
-            )
-        elif len(parts) > 2:
-            raise Unauthorized(
-                'invalid_header',
-                "Authorization header must be Bearer token"
-            )
-        claims = parts[1].split('.')[1]
-        if len(claims)%4 != 0:
-            claims += '='*(4 - len(claims)%4)
-        claims = json.loads(base64.b64decode(claims))
-        log.info("claims=%r", claims)
-        token = parts[1]
+        auth = auth.split()
+        if len(auth) != 2:
+            raise falcon.HTTPBadRequest('bad request format', "Expected 'Bearer' Token")
+        token = auth[1]
         try:
-            payload = jwt.decode(
-                token,
-                RSA_KEY,
-                algorithms=['RS256'],
-                audience=API_AUDIENCE
+            jwt.decode(token, PUBKEY, **AUTH_CONFIG)
+        except Exception as e:
+            log.exception(str(e))
+            raise falcon.HTTPUnauthorized(
+                'invalid_claims',
+                "Incorrect claims, please check the audience and issuer"
             )
-            log.info("payload=%r")
-        except jwt.ExpiredSignatureError:
-            log.exception("expired signature")
-            raise Unauthorized('token_expired', "Token is expired")
-        except jwt.JWTClaimsError as e:
-            log.exception("invalid_claims")
-            raise Unauthorized('invalid_claims', "Incorrect claims, please check the audience and issuer")
-        except Exception:
-            log.exception("exception")
-            raise BadRequest('invalid_header', "Unable to parse authentication token.")
