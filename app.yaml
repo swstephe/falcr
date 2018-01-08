@@ -35,8 +35,5 @@ skip_files:
 - ^package\.json$
 - ^package-lock\.json
 - ^webpack\.config\.js
-- data/
-- lib/
 - node_modules/
 - src/
-- venv/
